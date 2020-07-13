@@ -21,15 +21,19 @@ import grails.plugin.rendering.datauri.DataUriAwareITextUserAgent
 import org.springframework.util.ReflectionUtils
 import org.w3c.dom.Document
 import org.xhtmlrenderer.pdf.ITextRenderer
+import com.itextpdf.text.pdf.BaseFont;
 
 class PdfRenderingService extends RenderingService {
 
 	static transactional = false
-
+	def extraFont
+	def embbed = BaseFont.NOT_EMBEDDED
 	PdfRenderingService() {
 		ReflectionUtils.makeAccessible(ITextRenderer.getDeclaredField("_outputDevice"))
 	}
-
+	def setupFont(String fontPath){
+		extraFont=fontPath
+	}
 	protected doRender(Map args, Document document, OutputStream outputStream) {
 		def renderer = new ITextRenderer()
 		configureRenderer(renderer)
@@ -46,7 +50,9 @@ class PdfRenderingService extends RenderingService {
 		def outputDevice = renderer.@_outputDevice
 		def userAgent = new DataUriAwareITextUserAgent(outputDevice)
 		def sharedContext = renderer.sharedContext
-
+		if(extraFont){
+			renderer.getFontResolver().addFont(extraFont, BaseFont.IDENTITY_H, embbed);
+		}
 		sharedContext.userAgentCallback = userAgent
 		userAgent.sharedContext = sharedContext
 	}

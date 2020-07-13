@@ -30,14 +30,16 @@ grails.project.dependency.resolution = {
 	repositories {
 		grailsCentral()
 		mavenLocal()
-		mavenCentral()
+		//mavenCentral()
+		mavenRepo "https://repo1.maven.org/maven2/"
 	}
 
 	def seleniumVersion = "2.32.0"
 
 	dependencies {
-		compile("org.xhtmlrenderer:core-renderer:R8")
-		compile("com.lowagie:itext:2.1.0")
+		compile("org.xhtmlrenderer:flying-saucer-core:9.0.9")
+		compile("org.xhtmlrenderer:flying-saucer-pdf-itext5:9.0.9")
+		compile("com.itextpdf:itextpdf:5.4.5")
 		test("org.apache.pdfbox:pdfbox:1.0.0") {
 			exclude 'jempbox'
 			exported = false
